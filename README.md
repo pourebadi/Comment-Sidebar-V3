@@ -17,9 +17,7 @@ It's designed with a clean, dark-mode-first aesthetic and is fully responsive, c
 [**⬅️ View Live Demo**](https://ai.studio/apps/drive/1szNovNzlGG0huuvuoiqfqax3Sbuow2WO)
 
 ---
-
-*Replace this with a GIF or screenshot of the component in action.*
- 
+![Project Screenshot](https://raw.githubusercontent.com/pourebadi/Comment-Sidebar-V3/refs/heads/main/components/Modern%20React%20Comment%20Sidebar.jpg)
 
 ## ✨ Features
 
