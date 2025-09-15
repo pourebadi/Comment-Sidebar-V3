@@ -19,4 +19,5 @@ export interface CommentType {
     type: 'image';
   };
   resolved?: boolean;
+  isEdited?: boolean;
 }

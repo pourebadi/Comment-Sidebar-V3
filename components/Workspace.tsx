@@ -39,6 +39,11 @@ const mockComments: CommentType[] = [
         reactions: [{ emoji: '❤️', user: 'You' }],
         attachment: { url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400', type: 'image' }
     },
+    {
+        id: 5, author: { name: 'You', avatarUrl: 'https://i.pravatar.cc/40?u=you' },
+        timestamp: '6h ago', createdAt: new Date(), text: 'This comment has been edited to provide more clarity.',
+        reactions: [], isEdited: true
+    },
 ];
 
 
@@ -228,6 +233,8 @@ export const Workspace: React.FC<{ theme: Theme; toggleTheme: () => void }> = ({
                          </div>
                          <hr className="border-border" />
                          <Comment comment={mockComments[3]} currentUser={CURRENT_USER} onUpdateComment={emptyFunc} onDeleteComment={emptyFunc} onToggleReaction={emptyFunc} onToggleResolve={emptyFunc} onViewThread={emptyFunc} replyCount={0} />
+                         <hr className="border-border" />
+                         <Comment comment={mockComments[4]} currentUser={CURRENT_USER} onUpdateComment={emptyFunc} onDeleteComment={emptyFunc} onToggleReaction={emptyFunc} onToggleResolve={emptyFunc} onViewThread={emptyFunc} replyCount={0} />
                     </div>
                 </ComponentShowcase>
             </div>

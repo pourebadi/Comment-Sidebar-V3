@@ -450,6 +450,9 @@ export const Comment: React.FC<CommentProps> = ({
                     <div className="flex items-baseline space-x-2">
                         <span className="font-semibold text-foreground">{comment.author.name}</span>
                         <span className="text-xs text-muted-foreground">{comment.timestamp}</span>
+                         {comment.isEdited && (
+                            <span className="text-xs text-muted-foreground/80">(edited)</span>
+                        )}
                         {comment.resolved && (
                              <div className="flex items-center gap-1 text-xs text-green-600 dark:text-green-500 font-medium">
                                 <CheckCircleIcon className="!text-[14px]" />

@@ -364,7 +364,8 @@ const CommentInput: React.FC<{
     onAddComment: (text: string, attachmentUrl?: string) => void;
     placeholder: string;
     users: User[];
-}> = ({ onAddComment, placeholder, users }) => {
+    activeThreadId: number | null;
+}> = ({ onAddComment, placeholder, users, activeThreadId }) => {
     const [commentText, setCommentText] = useState('');
     const [attachmentPreview, setAttachmentPreview] = useState<string | null>(null);
     const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
@@ -378,6 +379,27 @@ const CommentInput: React.FC<{
     const suggestionsListRef = useRef<HTMLUListElement>(null);
     const emojiPickerContainerRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const draftKey = useMemo(() => activeThreadId ? `commentDraft_thread_${activeThreadId}` : 'commentDraft_main', [activeThreadId]);
+
+    // Load draft from localStorage on component mount or when thread changes
+    useEffect(() => {
+        const savedDraft = localStorage.getItem(draftKey);
+        if (savedDraft) {
+            setCommentText(savedDraft);
+        } else {
+            setCommentText(''); // Clear text when switching threads if no draft exists
+        }
+    }, [draftKey]);
+
+    // Save draft to localStorage whenever text changes
+    useEffect(() => {
+        if (commentText) {
+            localStorage.setItem(draftKey, commentText);
+        } else {
+            localStorage.removeItem(draftKey); // Clear draft if input is empty
+        }
+    }, [commentText, draftKey]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -806,7 +828,7 @@ export const Sidebar = () => {
 
     const handleUpdateComment = (id: number, text: string) => {
         setComments(prev => prev.map(c =>
-            c.id === id ? { ...c, text, timestamp: 'Edited' } : c
+            c.id === id ? { ...c, text, isEdited: true } : c
         ));
     };
 
@@ -1012,6 +1034,7 @@ export const Sidebar = () => {
                     onAddComment={(text, attachmentUrl) => handleAddComment(text, attachmentUrl, activeThreadId)}
                     placeholder={activeThreadId ? 'Reply to thread...' : 'Add Comment...'}
                     users={mentionableUsers}
+                    activeThreadId={activeThreadId}
                 />
             )}
         </div>

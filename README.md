@@ -31,6 +31,8 @@ It's designed with a clean, dark-mode-first aesthetic and is fully responsive, c
 - **🔗 Smart Parsing:** Automatically parses and styles hashtags (`#tag`) and URLs.
 - **🔃 Sorting & Filtering:** Sort comments by newest/oldest and filter conversations by user or resolution status.
 - **✏️ Edit & Delete:** Full control for users to edit or delete their own comments.
+- **✍️ Edited Indicator:** Displays an `(edited)` label on modified comments for conversation transparency.
+- **💾 Auto-Drafts:** Automatically saves your work in-progress. Never lose a long comment again if you accidentally close the tab.
 - **🎯 Boundary-Aware Popovers:** Tooltips and emoji pickers that intelligently reposition themselves to never go off-screen.
 - **🌗 Light & Dark Modes:** Beautifully styled for both light and dark themes, with automatic system preference detection.
 - **📱 Responsive Design:** A polished and accessible experience on all screen sizes, from mobile to desktop.
@@ -42,12 +44,12 @@ To get a local copy up and running, follow these simple steps.
 
 1.  **Clone the repository:**
     ```sh
-    git clone <repository_url>
+    git clone https://github.com/your-username/react-comment-sidebar.git
     ```
 
 2.  **Navigate to the project directory:**
     ```sh
-    cd <repository_name>
+    cd react-comment-sidebar
     ```
 
 3.  **Install NPM packages:**
