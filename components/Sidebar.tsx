@@ -1,16 +1,31 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, useCallback, useMemo } from 'react';
 import { CommentType } from '../types';
 import { Comment, EmojiPicker } from './Comment';
-import { AtIcon, TuneIcon, InfoIcon, ChatIcon, HistoryIcon, ArrowUpIcon, EmojiSmileAddIcon, ArrowBackIcon, SwapVertIcon, CheckIcon, PersonIcon, ChecklistIcon, AttachFileIcon, CloseIcon } from './icons';
+import { AtIcon, TuneIcon, InfoIcon, ChatIcon, HistoryIcon, ArrowUpIcon, EmojiSmileAddIcon, ArrowBackIcon, SwapVertIcon, CheckIcon, PersonIcon, ChecklistIcon, AttachFileIcon, CloseIcon, ForumIcon, ErrorIcon, ReopenIcon } from './icons';
 
 const CURRENT_USER = 'You';
+
+const getAvatar = (name: string) => {
+    // A simple, deterministic hash function to get a number from a string.
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        const char = name.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash |= 0; // Convert to 32bit integer
+    }
+    // Use the hash to pick a gender and an avatar index.
+    const gender = (Math.abs(hash) % 2 === 0) ? 'male' : 'female';
+    // There are 79 avatars for each gender (0-78)
+    const index = Math.abs(hash) % 79;
+    return `https://xsgames.co/randomusers/assets/avatars/${gender}/${index}.jpg`;
+};
 
 const initialComments: CommentType[] = [
   {
     id: 1,
     author: {
       name: 'Ali Rahimi',
-      avatarUrl: `https://i.pravatar.cc/40?u=ali`
+      avatarUrl: getAvatar('Ali Rahimi')
     },
     timestamp: '13m ago',
     createdAt: new Date(Date.now() - 13 * 60 * 1000),
@@ -25,7 +40,7 @@ const initialComments: CommentType[] = [
   },
    {
     id: 10,
-    author: { name: 'You', avatarUrl: 'https://i.pravatar.cc/40?u=you' },
+    author: { name: 'You', avatarUrl: getAvatar('You') },
     timestamp: '12m ago',
     createdAt: new Date(Date.now() - 12 * 60 * 1000),
     text: 'Totally agree!',
@@ -34,7 +49,7 @@ const initialComments: CommentType[] = [
   },
   {
     id: 11,
-    author: { name: 'Farzan Sadeghi', avatarUrl: 'https://i.pravatar.cc/40?u=farzan' },
+    author: { name: 'Farzan Sadeghi', avatarUrl: getAvatar('Farzan Sadeghi') },
     timestamp: '10m ago',
     createdAt: new Date(Date.now() - 10 * 60 * 1000),
     text: 'Good find, @Ali Rahimi!',
@@ -47,7 +62,7 @@ const initialComments: CommentType[] = [
   },
   {
     id: 12,
-    author: { name: 'You', avatarUrl: 'https://i.pravatar.cc/40?u=you' },
+    author: { name: 'You', avatarUrl: getAvatar('You') },
     timestamp: '9m ago',
     createdAt: new Date(Date.now() - 9 * 60 * 1000),
     text: 'What do you think about using a serif font for headings?',
@@ -58,7 +73,7 @@ const initialComments: CommentType[] = [
     id: 2,
     author: {
         name: 'Jane Doe',
-        avatarUrl: `https://i.pravatar.cc/40?u=jane`
+        avatarUrl: getAvatar('Jane Doe')
     },
     timestamp: '2h ago',
     createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
@@ -67,7 +82,7 @@ const initialComments: CommentType[] = [
   },
   {
     id: 3,
-    author: { name: 'Sadeghi', avatarUrl: 'https://i.pravatar.cc/40?u=sadeghi' },
+    author: { name: 'Sadeghi', avatarUrl: getAvatar('Sadeghi') },
     timestamp: '3h ago',
     createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000),
     text: 'Totally agree with @Jane Doe. Good typography is a game changer. Also, check out this resource: https://fonts.google.com/',
@@ -79,7 +94,7 @@ const initialComments: CommentType[] = [
   },
   {
     id: 4,
-    author: { name: 'Erfan Sharif', avatarUrl: 'https://i.pravatar.cc/40?u=erfan' },
+    author: { name: 'Erfan Sharif', avatarUrl: getAvatar('Erfan Sharif') },
     timestamp: '5h ago',
     createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000),
     text: "Just pushed a new update. Let me know what you guys think!\n#feedback #update",
@@ -90,7 +105,7 @@ const initialComments: CommentType[] = [
   },
   {
     id: 5,
-    author: { name: 'Farzan Sadeghi', avatarUrl: 'https://i.pravatar.cc/40?u=farzan' },
+    author: { name: 'Farzan Sadeghi', avatarUrl: getAvatar('Farzan Sadeghi') },
     timestamp: '1d ago',
     createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
     text: 'I found a small bug on the login page. It happens on mobile when you rotate the screen. Can someone from the dev team take a look? @Ali Rahimi',
@@ -99,7 +114,7 @@ const initialComments: CommentType[] = [
   },
     {
     id: 6,
-    author: { name: 'You', avatarUrl: 'https://i.pravatar.cc/40?u=you' },
+    author: { name: 'You', avatarUrl: getAvatar('You') },
     timestamp: '1d ago',
     createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000 + 10000),
     text: 'On it! I will check it out. #bugfix',
@@ -113,12 +128,62 @@ const initialComments: CommentType[] = [
 
 type Tab = 'tune' | 'info' | 'comments' | 'history';
 type SortOrder = 'newest' | 'oldest';
-type ResolutionFilter = 'all' | 'open';
+type ResolutionFilter = 'all' | 'open' | 'resolved';
 
 interface User {
   name: string;
   avatarUrl: string;
 }
+
+const CommentSkeleton: React.FC = () => (
+    <div className="flex items-start space-x-3 animate-pulse">
+        <div className="w-8 h-8 rounded-full bg-muted mt-0.5"></div>
+        <div className="flex-1 space-y-2 py-1">
+            <div className="h-3 bg-muted rounded w-1/3"></div>
+            <div className="space-y-1.5">
+                <div className="h-3 bg-muted rounded"></div>
+                <div className="h-3 bg-muted rounded w-5/6"></div>
+            </div>
+        </div>
+    </div>
+);
+
+const LoadingState: React.FC = () => (
+    <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        <CommentSkeleton />
+        <CommentSkeleton />
+        <CommentSkeleton />
+        <CommentSkeleton />
+    </div>
+);
+
+const EmptyState: React.FC<{ isFiltered: boolean }> = ({ isFiltered }) => (
+    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+        <ForumIcon className="!text-6xl text-muted-foreground/30 mb-4" />
+        <h3 className="text-lg font-semibold text-foreground">
+            {isFiltered ? "No Matching Comments" : "No Comments Yet"}
+        </h3>
+        <p className="text-muted-foreground mt-1">
+            {isFiltered ? "Try adjusting your filters." : "Be the first to start the conversation."}
+        </p>
+    </div>
+);
+
+const ErrorState: React.FC<{ onRetry: () => void }> = ({ onRetry }) => (
+     <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+        <ErrorIcon className="!text-6xl text-red-500/50 mb-4" />
+        <h3 className="text-lg font-semibold text-foreground">Something Went Wrong</h3>
+        <p className="text-muted-foreground mt-1 mb-4">We couldn't load the comments. Please try again.</p>
+        <button 
+            onClick={onRetry} 
+            className="flex items-center gap-2 px-4 py-2 bg-muted text-muted-foreground text-sm font-medium rounded-md hover:bg-accent hover:text-foreground transition-colors"
+        >
+            <ReopenIcon className="!text-lg" />
+            <span>Retry</span>
+        </button>
+    </div>
+);
+
 
 const ResolutionFilterControl: React.FC<{
     currentFilter: ResolutionFilter;
@@ -127,7 +192,8 @@ const ResolutionFilterControl: React.FC<{
 }> = ({ currentFilter, onSetFilter, onClose }) => {
     const options = [
         { value: 'all', label: 'All Comments' },
-        { value: 'open', label: 'Open Only' },
+        { value: 'open', label: 'Unresolved' },
+        { value: 'resolved', label: 'Resolved' },
     ];
 
     return (
@@ -278,6 +344,17 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({
     ];
     
     const selectedAuthor = allAuthors.find(a => a.name === filterUser);
+    
+    const resolutionFilterLabels: Record<ResolutionFilter, string> = {
+        all: 'All',
+        open: 'Unresolved',
+        resolved: 'Resolved',
+    };
+    
+    const sortOrderLabels: Record<SortOrder, string> = {
+        newest: 'Newest',
+        oldest: 'Oldest',
+    };
 
     if (isThreadView) {
         return (
@@ -334,7 +411,7 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({
                          <div className="relative">
                             <button onClick={onResolutionFilterClick} className="flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-accent transition-colors text-foreground">
                                 <ChecklistIcon className="!text-[18px] text-muted-foreground" />
-                                <span className="font-medium">{resolutionFilter === 'open' ? 'Open' : 'All'}</span>
+                                <span className="font-medium">{resolutionFilterLabels[resolutionFilter]}</span>
                             </button>
                             {isResolutionFilterOpen && (
                                 <div className="absolute top-full left-0 mt-2 z-20">
@@ -345,6 +422,7 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({
                         <div className="relative">
                             <button onClick={onSortClick} className="flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-accent transition-colors text-foreground">
                                 <SwapVertIcon className="!text-[18px] text-muted-foreground" />
+                                <span className="font-medium">{sortOrderLabels[sortOrder]}</span>
                             </button>
                             {isSortOpen && (
                                 <div className="absolute top-full right-0 mt-2 z-20">
@@ -720,7 +798,10 @@ const CommentInput: React.FC<{
 };
 
 export const Sidebar = () => {
-    const [comments, setComments] = useState<CommentType[]>(initialComments);
+    const [comments, setComments] = useState<CommentType[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
     const [activeTab, setActiveTab] = useState<Tab>('comments');
     const [activeThreadId, setActiveThreadId] = useState<number | null>(null);
     const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
@@ -735,6 +816,28 @@ export const Sidebar = () => {
     const headerRef = useRef<HTMLDivElement>(null);
     const [isAddingNewComment, setIsAddingNewComment] = useState(false);
 
+    const fetchData = useCallback(() => {
+        setIsLoading(true);
+        setError(null);
+        // Simulate API call
+        setTimeout(() => {
+            // To test error state, uncomment the following lines:
+            // if (Math.random() > 0.5) {
+            //    setError("Failed to fetch comments.");
+            //    setIsLoading(false);
+            //    return;
+            // }
+
+            // To test empty state, pass an empty array: setComments([])
+            setComments(initialComments); 
+            setIsLoading(false);
+        }, 1500);
+    }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
     const mentionableUsers = useMemo(() => {
         const users = new Map<string, User>();
         comments.forEach(comment => {
@@ -743,8 +846,6 @@ export const Sidebar = () => {
             }
         });
         const userList = Array.from(users.values());
-        // Add current user to mentionable users if needed, for self-mention
-        // users.set(CURRENT_USER, { name: CURRENT_USER, avatarUrl: `https://i.pravatar.cc/40?u=you` });
         return userList.sort((a,b) => a.name.localeCompare(b.name));
     }, [comments]);
 
@@ -794,7 +895,7 @@ export const Sidebar = () => {
             id: Date.now(),
             author: {
                 name: CURRENT_USER,
-                avatarUrl: `https://i.pravatar.cc/40?u=you`
+                avatarUrl: getAvatar(CURRENT_USER)
             },
             timestamp: 'Just now',
             createdAt: new Date(),
@@ -889,6 +990,8 @@ export const Sidebar = () => {
         
         if (resolutionFilter === 'open') {
             filtered = filtered.filter(c => !c.resolved);
+        } else if (resolutionFilter === 'resolved') {
+            filtered = filtered.filter(c => !!c.resolved);
         }
 
         return [...filtered].sort((a, b) => {
@@ -901,24 +1004,38 @@ export const Sidebar = () => {
 
 
     const renderMainView = () => {
+        if (isLoading) return <LoadingState />;
+        if (error) return <ErrorState onRetry={fetchData} />;
+        
+        const isFiltered = filterUser !== null || resolutionFilter !== 'all';
+        if (sortedTopLevelComments.length === 0) {
+             // Show filtered empty state if there are comments but none match the filter
+             // Show regular empty state if there are no comments at all
+            return <EmptyState isFiltered={isFiltered && comments.length > 0} />;
+        }
+
         return (
-            <main ref={commentsContainerRef} data-scroll-container="true" className="flex-1 overflow-y-auto p-4 space-y-6">
-                {sortedTopLevelComments.map(comment => {
-                    const totalReplies = getDescendantCount(comment.id);
-                    return (
-                        <Comment
-                            key={comment.id}
-                            comment={comment}
-                            currentUser={CURRENT_USER}
-                            onDeleteComment={handleDeleteComment}
-                            onUpdateComment={handleUpdateComment}
-                            onToggleReaction={handleToggleReaction}
-                            onToggleResolve={handleToggleResolve}
-                            onViewThread={() => setActiveThreadId(comment.id)}
-                            replyCount={totalReplies}
-                        />
-                    );
-                })}
+            <main ref={commentsContainerRef} data-scroll-container="true" className="flex-1 overflow-y-auto">
+                <div>
+                    {sortedTopLevelComments.map((comment, index) => {
+                        const totalReplies = getDescendantCount(comment.id);
+                        const isLastComment = index === sortedTopLevelComments.length - 1;
+                        return (
+                            <div key={comment.id} className={`p-4 ${!isLastComment ? 'border-b border-border' : ''}`}>
+                                <Comment
+                                    comment={comment}
+                                    currentUser={CURRENT_USER}
+                                    onDeleteComment={handleDeleteComment}
+                                    onUpdateComment={handleUpdateComment}
+                                    onToggleReaction={handleToggleReaction}
+                                    onToggleResolve={handleToggleResolve}
+                                    onViewThread={() => setActiveThreadId(comment.id)}
+                                    replyCount={totalReplies}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
             </main>
         );
     };
@@ -934,47 +1051,49 @@ export const Sidebar = () => {
         const commentsById = new Map(comments.map(c => [c.id, c]));
 
         return (
-             <main ref={commentsContainerRef} data-scroll-container="true" className="flex-1 overflow-y-auto p-4">
-                 <Comment
-                    comment={parentComment}
-                    currentUser={CURRENT_USER}
-                    onDeleteComment={handleDeleteComment}
-                    onUpdateComment={handleUpdateComment}
-                    onToggleReaction={handleToggleReaction}
-                    onToggleResolve={handleToggleResolve}
-                    onViewThread={() => {}} // Already in thread view
-                    replyCount={threadReplies.length}
-                    isThreadParent={true}
-                 />
-                 <div className="relative my-4">
-                    <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                        <div className="w-full border-t border-border"></div>
-                    </div>
-                    <div className="relative flex justify-start">
-                        <span className="bg-background pr-2 text-sm text-muted-foreground">{threadReplies.length} {threadReplies.length === 1 ? 'Reply' : 'Replies'}</span>
-                    </div>
+             <main ref={commentsContainerRef} data-scroll-container="true" className="flex-1 overflow-y-auto">
+                <div className="p-4 border-b border-border">
+                     <Comment
+                        comment={parentComment}
+                        currentUser={CURRENT_USER}
+                        onDeleteComment={handleDeleteComment}
+                        onUpdateComment={handleUpdateComment}
+                        onToggleReaction={handleToggleReaction}
+                        onToggleResolve={handleToggleResolve}
+                        onViewThread={() => {}} // Already in thread view
+                        replyCount={threadReplies.length}
+                        isThreadParent={true}
+                     />
                  </div>
+                 
+                 {threadReplies.length > 0 && (
+                    <div className="px-4">
+                        {threadReplies.map((reply) => {
+                            const parent = commentsById.get(reply.parentId!);
+                            const replyingToAuthor = (parent && parent.id !== activeThreadId) ? parent.author.name : undefined;
 
-                 <div className="space-y-6">
-                    {threadReplies.map(reply => {
-                          const parent = commentsById.get(reply.parentId!);
-                          const replyingToAuthor = (parent && parent.id !== activeThreadId) ? parent.author.name : undefined;
-
-                          return <Comment
-                            key={reply.id}
-                            comment={reply}
-                            currentUser={CURRENT_USER}
-                            onDeleteComment={handleDeleteComment}
-                            onUpdateComment={handleUpdateComment}
-                            onToggleReaction={handleToggleReaction}
-                            onToggleResolve={handleToggleResolve}
-                            onViewThread={() => {}} // Replies in a thread don't open sub-threads
-                            replyCount={0} // No sub-replies shown
-                            replyingToAuthor={replyingToAuthor}
-                            isParentResolved={parentComment.resolved}
-                        />
-                    })}
-                 </div>
+                            return (
+                                <div key={reply.id} className="py-4">
+                                    <div className="relative">
+                                        <div className="absolute left-4 top-0 bottom-0 w-px bg-border/40 z-0" aria-hidden="true"></div>
+                                        <Comment
+                                            comment={reply}
+                                            currentUser={CURRENT_USER}
+                                            onDeleteComment={handleDeleteComment}
+                                            onUpdateComment={handleUpdateComment}
+                                            onToggleReaction={handleToggleReaction}
+                                            onToggleResolve={handleToggleResolve}
+                                            onViewThread={() => {}} // Replies in a thread don't open sub-threads
+                                            replyCount={0} // No sub-replies shown
+                                            replyingToAuthor={replyingToAuthor}
+                                            isParentResolved={parentComment.resolved}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                 )}
             </main>
         );
     };

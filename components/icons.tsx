@@ -43,3 +43,8 @@ export const ChecklistIcon: React.FC<{ className?: string }> = ({ className }) =
 
 export const AttachFileIcon: React.FC<{ className?: string }> = ({ className }) => <MaterialIcon className={className}>attach_file</MaterialIcon>;
 export const CloseIcon: React.FC<{ className?: string }> = ({ className }) => <MaterialIcon className={className}>close</MaterialIcon>;
+
+export const ErrorIcon: React.FC<{ className?: string }> = ({ className }) => <MaterialIcon className={className}>error</MaterialIcon>;
+export const ForumIcon: React.FC<{ className?: string }> = ({ className }) => <MaterialIcon className={className}>forum</MaterialIcon>;
+
+export const PaletteIcon: React.FC<{ className?: string }> = ({ className }) => <MaterialIcon className={className}>palette</MaterialIcon>;

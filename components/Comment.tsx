@@ -29,7 +29,7 @@ interface TooltipProps {
   children: React.ReactElement;
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
+export const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [style, setStyle] = useState<React.CSSProperties>({ opacity: 0, pointerEvents: 'none' });
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -118,7 +118,7 @@ const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
       <div 
         ref={tooltipRef}
         style={style}
-        className="absolute p-2 text-xs text-primary-foreground bg-primary rounded-md shadow-lg z-30 w-48"
+        className="absolute p-2 text-xs text-popover-foreground bg-popover/80 backdrop-blur-sm border border-border rounded-lg shadow-xl z-30 w-48"
         role="tooltip"
       >
         {content}
@@ -162,7 +162,7 @@ interface CommentActionsMenuProps {
     isConfirmingDelete: boolean;
 }
 
-const CommentActionsMenu: React.FC<CommentActionsMenuProps> = ({ onEdit, onCopy, onDelete, onToggleResolve, isResolved, positionClass, isConfirmingDelete }) => (
+export const CommentActionsMenu: React.FC<CommentActionsMenuProps> = ({ onEdit, onCopy, onDelete, onToggleResolve, isResolved, positionClass, isConfirmingDelete }) => (
     <div className={`absolute w-48 bg-popover border border-border rounded-lg shadow-xl z-10 py-1 ${positionClass}`}>
         <ul aria-label="Comment actions">
             <li>
@@ -209,15 +209,16 @@ interface CommentProps {
   isThreadParent?: boolean;
   replyingToAuthor?: string;
   isParentResolved?: boolean;
+  initialIsEditing?: boolean;
 }
 
 export const Comment: React.FC<CommentProps> = ({ 
     comment, currentUser, 
     onUpdateComment, onDeleteComment, onToggleReaction, onToggleResolve, onViewThread, 
-    replyCount, isThreadParent = false, replyingToAuthor, isParentResolved = false
+    replyCount, isThreadParent = false, replyingToAuthor, isParentResolved = false, initialIsEditing = false
 }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(initialIsEditing);
     const [editedText, setEditedText] = useState(comment.text);
     const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
     const [showCopiedMessage, setShowCopiedMessage] = useState(false);
@@ -438,7 +439,7 @@ export const Comment: React.FC<CommentProps> = ({
 
     return (
         <div className={`flex items-start space-x-3 group transition-opacity ${isEffectivelyResolved ? 'opacity-60' : ''}`}>
-            <img src={comment.author.avatarUrl} alt={comment.author.name} className="w-8 h-8 rounded-full mt-0.5" />
+            <img src={comment.author.avatarUrl} alt={comment.author.name} className="relative z-10 w-8 h-8 rounded-full mt-0.5 object-cover" />
             <div className="flex-1">
                 {replyingToAuthor && (
                     <div className="text-xs text-muted-foreground mb-1.5 flex items-center gap-1">
@@ -527,7 +528,7 @@ export const Comment: React.FC<CommentProps> = ({
 
                                     const userListContent = (
                                         <div className="text-left">
-                                            <div className="font-bold pb-1 mb-1 border-b border-primary-foreground/25">
+                                            <div className="font-semibold pb-1.5 mb-1.5 border-b border-border">
                                                 Reacted with {emoji}
                                             </div>
                                             <div className="flex flex-col items-start gap-0.5 max-h-32 overflow-y-auto pr-1">
@@ -544,7 +545,7 @@ export const Comment: React.FC<CommentProps> = ({
                                                 onClick={() => onToggleReaction(comment.id, emoji)}
                                                 className={`flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 focus:ring-offset-background
                                                             ${isCurrentUserReaction 
-                                                                ? 'bg-primary/20 border border-primary/50 text-primary' 
+                                                                ? 'bg-sky-100 dark:bg-sky-500/20 border border-sky-500/50 text-sky-600 dark:text-sky-400' 
                                                                 : 'bg-accent border border-transparent hover:border-border text-foreground/70'}`}
                                                 aria-label={`Reacted by ${users.length} people`}
                                             >
