@@ -1,94 +1,94 @@
-# سایدبار کامنت مدرن با React
+# Modern React Comment Sidebar
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 ![Tech Stack](https://img.shields.io/badge/tech-React%20%7C%20TypeScript%20%7C%20Tailwind-blueviolet)
 
-یک کامپوننت سایدبار کاملاً مجهز و مدرن برای بحث و گفتگو که با **React**، **TypeScript** و **Tailwind CSS** ساخته شده است. این پروژه راهی یکپارچه برای ادغام مکالمات تعاملی و بی‌درنگ در هر وب اپلیکیشنی فراهم می‌کند.
+A fully-featured, modern comment and discussion sidebar component built with **React**, **TypeScript**, and **Tailwind CSS**. This project provides a seamless way to integrate interactive, real-time conversations into any web application.
 
-این کامپوننت با طراحی تمیز و اولویت با حالت تاریک (dark-mode-first) ساخته شده و کاملاً واکنش‌گرا، قابل سفارشی‌سازی و آسان برای یکپارچه‌سازی است.
-
----
-
-## 🚀 دموی زنده
-
-**دموی زنده و تعاملی این کامپوننت را اینجا ببینید:**
-
-[**⬅️ مشاهده دموی زنده**](https://ai.studio/apps/drive/1szNovNzlGG0huuvuoiqfqax3Sbuow2WO)
+It's designed with a clean, dark-mode-first aesthetic and is fully responsive, customizable, and easy to integrate.
 
 ---
 
-*اینجا را با یک GIF یا تصویر از عملکرد کامپوننت جایگزین کنید.*
+## 🚀 Live Demo
+
+**Check out the interactive live demo of the component here:**
+
+[**⬅️ View Live Demo**](https://ai.studio/apps/drive/1szNovNzlGG0huuvuoiqfqax3Sbuow2WO)
+
+---
+
+*Replace this with a GIF or screenshot of the component in action.*
  
 
-## ✨ ویژگی‌ها
+## ✨ Features
 
-- **💬 پاسخ‌های تودرتو (Threaded Replies):** کامنت‌های تو در تو برای سازماندهی بحث‌ها و دنبال کردن آسان مکالمات.
-- **😍 واکنش با اموجی (Emoji Reactions):** به کاربران اجازه دهید با مجموعه‌ای از اموجی‌ها به کامنت‌ها واکنش نشان دهند. با نگه‌داشتن ماوس روی واکنش‌ها، لیست افراد نمایش داده می‌شود.
-- **✅ حل کردن کامنت‌ها (Comment Resolution):** کل ریسه‌های گفتگو را به عنوان "حل شده" علامت‌گذاری کنید تا فضای کاری تمیز شود و در عین حال تاریخچه حفظ گردد.
-- **🖼️ پیوست تصویر (Image Attachments):** برای بازخورد بصری واضح‌تر، تصاویر را به کامنت‌ها پیوست کنید.
-- **👤 منشن کردن کاربران (User Mentions):** با استفاده از `@` کاربران دیگر را تگ کنید؛ همراه با یک پاپ‌آپ هوشمند برای پیشنهاد کاربران.
-- **🔗 تجزیه هوشمند متن (Smart Parsing):** به طور خودکار هشتگ‌ها (`#tag`) و آدرس‌های اینترنتی (URL) را شناسایی و استایل‌دهی می‌کند.
-- **🔃 مرتب‌سازی و فیلتر پیشرفته:** کامنت‌ها را بر اساس جدیدترین/قدیمی‌ترین مرتب کنید و گفتگوها را بر اساس کاربر یا وضعیت حل شدن فیلتر نمایید.
-- **✏️ ویرایش و حذف:** کنترل کامل برای کاربران جهت ویرایش یا حذف کامنت‌های خود، همراه با یک مرحله تأیید برای جلوگیری از حذف تصادفی.
-- **✍️ نشانگر ویرایش:** برای شفافیت در مکالمه، برچسب `(ویرایش شده)` را روی کامنت‌های تغییر یافته نمایش می‌دهد.
-- **💾 پیش‌نویس خودکار (Auto-Drafts):** به طور خودکار پیش‌نویس شما را در حین تایپ ذخیره می‌کند. دیگر هرگز یک کامنت طولانی را با بستن تصادفی تب از دست ندهید. این قابلیت برای هر ریسه به صورت مجزا عمل می‌کند.
-- **🎯 پاپ‌آپ‌های هوشمند (Boundary-Aware Popovers):** تولتیپ‌ها و انتخابگرهای اموجی به طور هوشمند موقعیت خود را تغییر می‌دهند تا هرگز از صفحه خارج نشوند.
-- **🌗 حالت روشن و تاریک (Light & Dark Modes):** طراحی زیبا برای هر دو تم روشن و تاریک، با قابلیت تشخیص خودکار تنظیمات سیستم.
-- **📱 طراحی واکنش‌گرا (Responsive Design):** تجربه‌ای روان و در دسترس در تمام اندازه‌های صفحه، از موبایل تا دسکتاپ.
-- **🧩 یکپارچه‌سازی آسان:** به عنوان یک کامپوننت مستقل (drop-in) برای هر اپلیکیشن React طراحی شده است.
-- ** E مدیریت وضعیت‌ها (State Handling):** نمایش وضعیت‌های `در حال بارگذاری`، `خالی` و `خطا` برای ارائه بازخورد مناسب به کاربر.
-- **🔗 کپی لینک کامنت:** به راحتی لینک مستقیم یک کامنت خاص را برای اشتراک‌گذاری کپی کنید.
+- **💬 Threaded Replies:** Nested comments for organized discussions and easy-to-follow conversations.
+- **😍 Emoji Reactions:** Let users react to comments with a set of emojis. Hovering over a reaction shows who reacted.
+- **✅ Comment Resolution:** Mark entire comment threads as "resolved" to clean up the workspace while preserving history.
+- **🖼️ Image Attachments:** Attach images to comments for clearer visual feedback.
+- **👤 User Mentions:** Tag other users with `@` mentions, complete with a smart suggestion popover.
+- **🔗 Smart Text Parsing:** Automatically detects and styles hashtags (`#tag`) and URLs.
+- **🔃 Advanced Sorting & Filtering:** Sort comments by newest/oldest, and filter conversations by user or resolution status.
+- **✏️ Edit & Delete:** Full control for users to edit or delete their own comments, with a confirmation step to prevent accidental deletion.
+- **✍️ Edited Indicator:** Displays an `(edited)` label on modified comments for conversational transparency.
+- **💾 Auto-Drafts:** Automatically saves your draft as you type. Never lose a long comment by accidentally closing a tab. Works on a per-thread basis.
+- **🎯 Boundary-Aware Popovers:** Tooltips and emoji pickers intelligently reposition themselves to never go off-screen.
+- **🌗 Light & Dark Modes:** Beautifully designed for both light and dark themes, with auto-detection for system preference.
+- **📱 Responsive Design:** A seamless and accessible experience on all screen sizes, from mobile to desktop.
+- **🧩 Easy Integration:** Designed as a drop-in component for any React application.
+- ** E State Handling:** Displays `Loading`, `Empty`, and `Error` states to provide appropriate user feedback.
+- **🔗 Copy Comment Link:** Easily copy a direct link to a specific comment for sharing.
 
 
-## 🛠️ نصب و راه‌اندازی
+## 🛠️ Getting Started
 
-برای دریافت یک کپی محلی و اجرای آن، مراحل ساده زیر را دنبال کنید.
+To get a local copy up and running, follow these simple steps.
 
-۱. **کلون کردن ریپازیتوری:**
+1.  **Clone the repo:**
     ```sh
     git clone https://github.com/your-username/react-comment-sidebar.git
     ```
 
-۲. **رفتن به دایرکتوری پروژه:**
+2.  **Navigate to the project directory:**
     ```sh
     cd react-comment-sidebar
     ```
 
-۳. **نصب پکیج‌های NPM:**
-    *(با فرض اینکه Node.js و npm روی سیستم شما نصب است)*
+3.  **Install NPM packages:**
+    *(Assuming you have Node.js and npm installed)*
     ```sh
     npm install
     ```
 
-۴. **اجرای سرور توسعه:**
+4.  **Run the development server:**
     ```sh
     npm start
     ```
-    این دستور پروژه را در مرورگر شما باز می‌کند.
+    This will open the project in your browser.
 
-## 💻 نحوه استفاده
+## 💻 How to Use
 
-برای ادغام سایدبار کامنت در اپلیکیشن React خود، به سادگی کامپوننت `Sidebar` را import کرده و رندر کنید. این کامپوننت کاملاً مستقل است و وضعیت داخلی خود را مدیریت می‌کند.
+To integrate the comment sidebar into your React application, simply import and render the `Sidebar` component. It is fully self-contained and manages its own state.
 
-در اینجا یک مثال ساده آورده شده است:
+Here is a basic example:
 
 ```jsx
 import React from 'react';
-import { Sidebar } from './components/Sidebar'; // مسیر import را در صورت نیاز تنظیم کنید
-import './your-tailwind-styles.css'; // اطمینان حاصل کنید که Tailwind CSS در پروژه شما تنظیم شده است
+import { Sidebar } from './components/Sidebar'; // Adjust the import path as needed
+import './your-tailwind-styles.css'; // Ensure Tailwind CSS is set up in your project
 
 function YourApp() {
   return (
     <div style={{ display: 'flex' }}>
       
-      {/* محتوای اصلی اپلیکیشن شما */}
+      {/* Your main application content */}
       <main style={{ flex: 1, padding: '2rem' }}>
-        <h1>محتوای جذاب من</h1>
-        <p>اینجا محتوای اصلی اپلیکیشن قرار می‌گیرد.</p>
+        <h1>My Awesome Content</h1>
+        <p>This is where the main application content lives.</p>
       </main>
 
-      {/* سایدبار کامنت */}
+      {/* The Comment Sidebar */}
       <aside style={{ width: '360px', height: '100vh', borderLeft: '1px solid #e2e8f0' }}>
         <Sidebar />
       </aside>
@@ -100,25 +100,25 @@ function YourApp() {
 export default YourApp;
 ```
 
-## 🎨 تکنولوژی‌های استفاده شده
+## 🎨 Tech Stack
 
-این پروژه با استفاده از تکنولوژی‌های مدرن فرانت‌اند ساخته شده است:
+This project is built with modern frontend technologies:
 
--   [**React**](https://reactjs.org/) - یک کتابخانه جاوااسکریپت برای ساخت رابط‌های کاربری.
--   [**TypeScript**](https://www.typescriptlang.org/) - برای تایپ ایستا و تجربه توسعه بهتر.
--   [**Tailwind CSS**](https://tailwindcss.com/) - یک فریم‌ورک CSS از نوع utility-first برای توسعه سریع UI.
--   [**Material Symbols**](https://fonts.google.com/icons) - برای آیکون‌های تمیز و مدرن.
+-   [**React**](https://reactjs.org/) - A JavaScript library for building user interfaces.
+-   [**TypeScript**](https://www.typescriptlang.org/) - For static typing and a better developer experience.
+-   [**Tailwind CSS**](https://tailwindcss.com/) - A utility-first CSS framework for rapid UI development.
+-   [**Material Symbols**](https://fonts.google.com/icons) - For clean and modern icons.
 
-## 🤝 مشارکت
+## 🤝 Contributing
 
-از مشارکت‌ها، گزارش مشکلات و درخواست ویژگی‌های جدید استقبال می‌شود!
+Contributions, issues, and feature requests are welcome!
 
-۱. **فورک** کردن پروژه
-۲. ایجاد شاخه ویژگی جدید (`git checkout -b feature/AmazingFeature`)
-۳. کامیت کردن تغییرات (`git commit -m 'Add some AmazingFeature'`)
-۴. پوش کردن به شاخه (`git push origin feature/AmazingFeature`)
-۵. باز کردن یک **Pull Request**
+1.  **Fork** the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a **Pull Request**
 
-## 📄 لایسنس
+## 📄 License
 
-تحت لایسنس MIT توزیع شده است. برای اطلاعات بیشتر فایل `LICENSE` را ببینید.
+Distributed under the MIT License. See `LICENSE` for more information.
