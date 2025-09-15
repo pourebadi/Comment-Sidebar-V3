@@ -1,0 +1,5 @@
+{
+  "name": "Comment Sidebar V3",
+  "description": "A fully-featured, modern comment and discussion sidebar component built with React, TypeScript, and Tailwind CSS. This project provides a seamless way to integrate interactive, real-time conversations into any web application.\nIt's designed with a clean, dark-mode-first aesthetic and is fully responsive, customizable, and easy to integrate.",
+  "requestFramePermissions": []
+}
