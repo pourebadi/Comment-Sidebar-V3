@@ -453,7 +453,7 @@ export const Comment: React.FC<CommentProps> = ({
 
     return (
         <div className={`flex items-start space-x-3 group transition-opacity ${isEffectivelyResolved ? 'opacity-60' : ''}`}>
-            <img src={comment.author.avatarUrl} alt={comment.author.name} className="relative z-10 w-8 h-8 rounded-full mt-0.5 object-cover" />
+            <img src={comment.author.avatarUrl} alt={comment.author.name} className="w-8 h-8 rounded-full mt-0.5 object-cover" />
             <div className="flex-1">
                 {replyingToAuthor && (
                     <div className="text-xs text-muted-foreground mb-1.5 flex items-center gap-1">
@@ -523,7 +523,7 @@ export const Comment: React.FC<CommentProps> = ({
                 ) : (
                     <>
                         {comment.text && (
-                            <div className="text-foreground/90 mt-1 text-[14px] leading-relaxed whitespace-pre-wrap">
+                            <div className="text-foreground/90 mt-1 text-[14px] leading-relaxed whitespace-pre-wrap break-words">
                                 {parseCommentText(comment.text)}
                             </div>
                         )}

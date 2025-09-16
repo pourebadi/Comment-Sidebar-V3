@@ -4,8 +4,6 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 ![Tech Stack](https://img.shields.io/badge/tech-React%20%7C%20TypeScript%20%7C%20Tailwind-blueviolet)
 
-![screenShot](https://github.com/pourebadi/Comment-Sidebar-V3/blob/main/components/Modern%20React%20Comment%20Sidebar.jpg?raw=true)
-
 A fully-featured, modern comment and discussion sidebar component built with **React**, **TypeScript**, and **Tailwind CSS**. This project provides a seamless way to integrate interactive, real-time conversations into any web application.
 
 It's designed with a clean, dark-mode-first aesthetic and is fully responsive, customizable, and easy to integrate.

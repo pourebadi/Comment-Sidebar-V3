@@ -1123,19 +1123,22 @@ export const Sidebar = () => {
                                 <div key={reply.id} className="py-4">
                                     <div className="relative">
                                         <div className="absolute left-4 top-0 bottom-0 w-px bg-border/40 z-0" aria-hidden="true"></div>
-                                        <Comment
-                                            comment={reply}
-                                            currentUser={CURRENT_USER}
-                                            onDeleteComment={handleDeleteComment}
-                                            onUpdateComment={handleUpdateComment}
-                                            onToggleReaction={handleToggleReaction}
-                                            onToggleResolve={handleToggleResolve}
-                                            onTogglePin={handleTogglePinComment}
-                                            onViewThread={() => {}} // Replies in a thread don't open sub-threads
-                                            replyCount={0} // No sub-replies shown
-                                            replyingToAuthor={replyingToAuthor}
-                                            isParentResolved={parentComment.resolved}
-                                        />
+                                        {/* This relative wrapper ensures the comment and its contents create a new stacking context, placing it above the z-0 line. */}
+                                        <div className="relative">
+                                            <Comment
+                                                comment={reply}
+                                                currentUser={CURRENT_USER}
+                                                onDeleteComment={handleDeleteComment}
+                                                onUpdateComment={handleUpdateComment}
+                                                onToggleReaction={handleToggleReaction}
+                                                onToggleResolve={handleToggleResolve}
+                                                onTogglePin={handleTogglePinComment}
+                                                onViewThread={() => {}} // Replies in a thread don't open sub-threads
+                                                replyCount={0} // No sub-replies shown
+                                                replyingToAuthor={replyingToAuthor}
+                                                isParentResolved={parentComment.resolved}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             );
