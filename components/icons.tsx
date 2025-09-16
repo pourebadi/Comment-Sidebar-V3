@@ -25,6 +25,7 @@ export const EditIcon: React.FC<{ className?: string }> = ({ className }) => <Ma
 export const CopyLinkIcon: React.FC<{ className?: string }> = ({ className }) => <MaterialIcon className={className}>content_copy</MaterialIcon>;
 export const DeleteIcon: React.FC<{ className?: string }> = ({ className }) => <MaterialIcon className={className}>delete</MaterialIcon>;
 export const ReplyIcon: React.FC<{ className?: string }> = ({ className }) => <MaterialIcon className={className}>reply</MaterialIcon>;
+export const PushPinIcon: React.FC<{ className?: string }> = ({ className }) => <MaterialIcon className={className}>push_pin</MaterialIcon>;
 
 export const LightModeIcon: React.FC<{ className?: string }> = ({ className }) => <MaterialIcon className={className}>light_mode</MaterialIcon>;
 export const DarkModeIcon: React.FC<{ className?: string }> = ({ className }) => <MaterialIcon className={className}>dark_mode</MaterialIcon>;

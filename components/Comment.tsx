@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import type { CommentType } from '../types';
-import { EmojiSmileAddIcon, MoreVertIcon, EditIcon, CopyLinkIcon, DeleteIcon, ReplyIcon, CheckCircleIcon, ReopenIcon } from './icons';
+import { EmojiSmileAddIcon, MoreVertIcon, EditIcon, CopyLinkIcon, DeleteIcon, ReplyIcon, CheckCircleIcon, ReopenIcon, PushPinIcon } from './icons';
 
 const parseCommentText = (text: string) => {
     const regex = /(https?:\/\/[^\s]+)|(#[a-zA-Z0-9_]+)|(@[a-zA-Z0-9_ .]+?(?=\s@|\s#|\shttp|\n|$))/g;
@@ -157,18 +157,26 @@ interface CommentActionsMenuProps {
     onCopy: () => void;
     onDelete: () => void;
     onToggleResolve: () => void;
+    onTogglePin: () => void;
     isResolved: boolean;
+    isPinned: boolean;
     positionClass: string;
     isConfirmingDelete: boolean;
 }
 
-export const CommentActionsMenu: React.FC<CommentActionsMenuProps> = ({ onEdit, onCopy, onDelete, onToggleResolve, isResolved, positionClass, isConfirmingDelete }) => (
+export const CommentActionsMenu: React.FC<CommentActionsMenuProps> = ({ onEdit, onCopy, onDelete, onToggleResolve, onTogglePin, isResolved, isPinned, positionClass, isConfirmingDelete }) => (
     <div className={`absolute w-48 bg-popover border border-border rounded-lg shadow-xl z-10 py-1 ${positionClass}`}>
         <ul aria-label="Comment actions">
             <li>
                 <button onClick={onToggleResolve} className="w-full text-left px-3 py-1.5 hover:bg-accent cursor-pointer flex items-center gap-3 text-sm text-popover-foreground">
                     {isResolved ? <ReopenIcon className="!text-[18px] text-muted-foreground" /> : <CheckCircleIcon className="!text-[18px] text-muted-foreground" />}
                     <span>{isResolved ? 'Re-open Comment' : 'Resolve Comment'}</span>
+                </button>
+            </li>
+            <li>
+                <button onClick={onTogglePin} className="w-full text-left px-3 py-1.5 hover:bg-accent cursor-pointer flex items-center gap-3 text-sm text-popover-foreground">
+                    <PushPinIcon className="!text-[18px] text-muted-foreground" />
+                    <span>{isPinned ? 'Unpin Comment' : 'Pin Comment'}</span>
                 </button>
             </li>
              <hr className="border-border my-1" />
@@ -204,6 +212,7 @@ interface CommentProps {
   onDeleteComment: (id: number) => void;
   onToggleReaction: (id: number, emoji: string) => void;
   onToggleResolve: (id: number) => void;
+  onTogglePin: (id: number) => void;
   onViewThread: () => void;
   replyCount: number;
   isThreadParent?: boolean;
@@ -214,7 +223,7 @@ interface CommentProps {
 
 export const Comment: React.FC<CommentProps> = ({ 
     comment, currentUser, 
-    onUpdateComment, onDeleteComment, onToggleReaction, onToggleResolve, onViewThread, 
+    onUpdateComment, onDeleteComment, onToggleReaction, onToggleResolve, onTogglePin, onViewThread, 
     replyCount, isThreadParent = false, replyingToAuthor, isParentResolved = false, initialIsEditing = false
 }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -345,7 +354,7 @@ export const Comment: React.FC<CommentProps> = ({
             const scrollContainer = scrollContainerRef.current;
             const containerRect = scrollContainer.getBoundingClientRect();
             const buttonRect = menuTriggerRef.current.getBoundingClientRect();
-            const menuHeight = 120; // Approximation
+            const menuHeight = 150; // Approximation for new height
             const menuMargin = 8;
             const spaceAbove = buttonRect.top - containerRect.top;
             const spaceBelow = containerRect.bottom - buttonRect.bottom;
@@ -411,6 +420,11 @@ export const Comment: React.FC<CommentProps> = ({
         onToggleResolve(comment.id);
         setIsMenuOpen(false);
     };
+    
+    const handleTogglePin = () => {
+        onTogglePin(comment.id);
+        setIsMenuOpen(false);
+    };
 
     const handleSaveEdit = () => {
         if (editedText.trim() || comment.attachment) { // Allow saving if there's an attachment, even with empty text
@@ -448,11 +462,17 @@ export const Comment: React.FC<CommentProps> = ({
                     </div>
                  )}
                 <div className="flex items-center justify-between">
-                    <div className="flex items-baseline space-x-2">
+                    <div className="flex items-baseline space-x-2 flex-wrap">
                         <span className="font-semibold text-foreground">{comment.author.name}</span>
                         <span className="text-xs text-muted-foreground">{comment.timestamp}</span>
                          {comment.isEdited && (
                             <span className="text-xs text-muted-foreground/80">(edited)</span>
+                        )}
+                        {comment.isPinned && (
+                            <div className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-500 font-medium">
+                                <PushPinIcon className="!text-[14px]" />
+                                <span>Pinned</span>
+                            </div>
                         )}
                         {comment.resolved && (
                              <div className="flex items-center gap-1 text-xs text-green-600 dark:text-green-500 font-medium">
@@ -480,7 +500,7 @@ export const Comment: React.FC<CommentProps> = ({
                                     <MoreVertIcon className="!text-[20px]" />
                                     {showCopiedMessage && <span className="absolute bottom-full mb-1 right-0 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-md">Copied!</span>}
                                 </button>
-                                {isMenuOpen && <CommentActionsMenu onEdit={handleEdit} onCopy={handleCopyLink} onDelete={handleDelete} onToggleResolve={handleToggleResolve} isResolved={!!comment.resolved} positionClass={menuPosition} isConfirmingDelete={isConfirmingDelete} />}
+                                {isMenuOpen && <CommentActionsMenu onEdit={handleEdit} onCopy={handleCopyLink} onDelete={handleDelete} onToggleResolve={handleToggleResolve} onTogglePin={handleTogglePin} isResolved={!!comment.resolved} isPinned={!!comment.isPinned} positionClass={menuPosition} isConfirmingDelete={isConfirmingDelete} />}
                             </div>
                         </div>
                     )}

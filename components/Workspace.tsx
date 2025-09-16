@@ -398,6 +398,27 @@ const mockComments: CommentType[] = [
         timestamp: '2d ago', createdAt: new Date(Date.now() - 2 * 86400000 + 60000), text: 'Sounds good, thanks!',
         reactions: [], parentId: 8,
     },
+     {
+        id: 10, author: { name: 'Ali Rahimi', avatarUrl: getAvatar('Ali Rahimi') },
+        timestamp: '3d ago', createdAt: new Date(Date.now() - 3 * 86400000), text: 'This comment is pinned to the top for visibility.',
+        reactions: [], isPinned: true,
+    },
+    // Data for long thread showcase
+    {
+        id: 11, author: { name: 'Sadeghi', avatarUrl: getAvatar('Sadeghi') },
+        timestamp: '4d ago', createdAt: new Date(Date.now() - 4 * 86400000), text: 'This is the start of a very long discussion thread with many replies to test performance.',
+        reactions: [],
+    },
+    ...Array.from({ length: 25 }, (_, i) => ({
+        id: 100 + i,
+        author: mockUsers[i % (mockUsers.length -1) + 1], // Cycle through users, skipping "You"
+        timestamp: `${20-i}h ago`,
+        createdAt: new Date(Date.now() - (4 * 86400000 + (20-i) * 3600000)),
+        text: `This is reply number ${i + 1}. We need to ensure the UI remains smooth even with a large number of comments. Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+        reactions: i % 5 === 0 ? [{ emoji: '👍', user: 'You' }] : [],
+        parentId: 11,
+        isEdited: i === 3,
+    })),
 ];
 
 // --- COMPONENT MOCKS ---
@@ -636,6 +657,52 @@ export const Workspace: React.FC<{ theme: Theme; toggleTheme: () => void }> = ({
         oldest: 'Oldest',
     };
 
+    const LongThreadShowcase: React.FC = () => {
+        const parentComment = mockComments.find(c => c.id === 11)!;
+        const allReplies = useMemo(() => mockComments
+            .filter(c => c.parentId === 11)
+            .sort((a,b) => a.createdAt.getTime() - b.createdAt.getTime()), []);
+        
+        const BATCH_SIZE = 5;
+        const [visibleCount, setVisibleCount] = useState(BATCH_SIZE);
+
+        const visibleReplies = allReplies.slice(0, visibleCount);
+        const remainingCount = allReplies.length - visibleCount;
+
+        const handleLoadMore = () => {
+            setVisibleCount(prev => Math.min(prev + BATCH_SIZE, allReplies.length));
+        };
+
+        return (
+            <div>
+                <Comment comment={parentComment} currentUser={CURRENT_USER} isThreadParent={true} replyCount={allReplies.length} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc}} />
+                
+                <div className="pl-4 mt-4">
+                    {visibleReplies.map(reply => (
+                        <div key={reply.id} className="py-4">
+                             <div className="relative">
+                                <div className="absolute left-4 top-0 bottom-0 w-px bg-border/40 z-0" aria-hidden="true"></div>
+                                <Comment comment={reply} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc, replyCount: 0, replyingToAuthor: parentComment.author.name}} />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                
+                {remainingCount > 0 && (
+                    <div className="px-4 pb-4 text-center">
+                         <div className="h-px bg-border my-2 w-1/4 mx-auto"></div>
+                         <button 
+                            onClick={handleLoadMore} 
+                            className="text-sm font-semibold text-sky-500 hover:text-sky-400 p-2 rounded-md"
+                        >
+                            View {Math.min(remainingCount, BATCH_SIZE)} more {remainingCount > 1 ? 'replies' : 'reply'}
+                        </button>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     return (
         <main className="flex-1 h-screen overflow-y-auto">
             <header className="sticky top-0 z-10 bg-background/90 backdrop-blur-sm border-b border-border">
@@ -778,7 +845,17 @@ export const Workspace: React.FC<{ theme: Theme; toggleTheme: () => void }> = ({
                                         <button className="p-2 rounded-full bg-background border border-border text-muted-foreground">
                                             <Icons.MoreVertIcon className="!text-[20px]" />
                                         </button>
-                                        <CommentActionsMenu onEdit={() => {}} onCopy={() => {}} onDelete={() => {}} onToggleResolve={() => {}} isResolved={false} positionClass="static" isConfirmingDelete={false} />
+                                        <CommentActionsMenu onEdit={() => {}} onCopy={() => {}} onDelete={() => {}} onToggleResolve={() => {}} onTogglePin={() => {}} isResolved={false} isPinned={false} positionClass="static" isConfirmingDelete={false} />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <h3 className="font-semibold text-sm">Actions (Pinned)</h3>
+                                    <div className="flex flex-col items-start gap-2 relative">
+                                        <button className="p-2 rounded-full bg-background border border-border text-muted-foreground">
+                                            <Icons.MoreVertIcon className="!text-[20px]" />
+                                        </button>
+                                        <CommentActionsMenu onEdit={() => {}} onCopy={() => {}} onDelete={() => {}} onToggleResolve={() => {}} onTogglePin={() => {}} isResolved={false} isPinned={true} positionClass="static" isConfirmingDelete={false} />
                                     </div>
                                 </div>
                                 
@@ -788,7 +865,7 @@ export const Workspace: React.FC<{ theme: Theme; toggleTheme: () => void }> = ({
                                         <button className="p-2 rounded-full bg-background border border-border text-muted-foreground">
                                             <Icons.MoreVertIcon className="!text-[20px]" />
                                         </button>
-                                        <CommentActionsMenu onEdit={() => {}} onCopy={() => {}} onDelete={() => {}} onToggleResolve={() => {}} isResolved={false} positionClass="static" isConfirmingDelete={true} />
+                                        <CommentActionsMenu onEdit={() => {}} onCopy={() => {}} onDelete={() => {}} onToggleResolve={() => {}} onTogglePin={() => {}} isResolved={false} isPinned={false} positionClass="static" isConfirmingDelete={true} />
                                     </div>
                                 </div>
                                 
@@ -885,39 +962,50 @@ export const Workspace: React.FC<{ theme: Theme; toggleTheme: () => void }> = ({
                         <Showcase title="Comment Component States" description="The core component for displaying user discussions, shown in various states to demonstrate its full range of features.">
                             <div className="grid md:grid-cols-1 gap-8" data-scroll-container="true">
                                 <CommentStateShowcaseItem title="Standard Comment" description="Default appearance with rich text parsing for links, #hashtags, and @mentions.">
-                                    <Comment comment={mockComments.find(c => c.id === 1)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} />
+                                    <Comment comment={mockComments.find(c => c.id === 1)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} />
+                                </CommentStateShowcaseItem>
+                                 <CommentStateShowcaseItem 
+                                    title="Pinned Comment" 
+                                    description="A pinned comment is highlighted with an icon, text indicator, and a subtle background color to make it stand out."
+                                    className="bg-muted"
+                                >
+                                    <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground mb-3 pl-11">
+                                        <Icons.PushPinIcon className="!text-[16px]" />
+                                        PINNED COMMENT
+                                    </div>
+                                    <Comment comment={mockComments.find(c => c.id === 10)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} />
                                 </CommentStateShowcaseItem>
                                 <CommentStateShowcaseItem title="Comment by Current User" description="Comments by 'You' have the same appearance but different permissions for actions.">
-                                    <Comment comment={mockComments.find(c => c.id === 7)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} />
+                                    <Comment comment={mockComments.find(c => c.id === 7)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} />
                                 </CommentStateShowcaseItem>
                                  <CommentStateShowcaseItem title="Comment with Attachment" description="A comment that includes an image attachment.">
-                                    <Comment comment={mockComments.find(c => c.id === 4)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} />
+                                    <Comment comment={mockComments.find(c => c.id === 4)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} />
                                 </CommentStateShowcaseItem>
                                 <CommentStateShowcaseItem title="Edited Comment" description="An indicator appears if a comment has been modified after posting.">
-                                    <Comment comment={mockComments.find(c => c.id === 5)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} />
+                                    <Comment comment={mockComments.find(c => c.id === 5)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} />
                                 </CommentStateShowcaseItem>
                                 <CommentStateShowcaseItem title="Editing State" description="The interface shown when a user is actively editing their comment.">
-                                    <Comment comment={mockComments.find(c => c.id === 5)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} initialIsEditing={true} />
+                                    <Comment comment={mockComments.find(c => c.id === 5)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} initialIsEditing={true} />
                                 </CommentStateShowcaseItem>
-                                <CommentStateShowcaseItem title="Comment with Replies" description="A thread parent that has replies, showing a button to view the thread.">
-                                    <Comment comment={mockComments.find(c => c.id === 2)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onViewThread: emptyFunc, replyCount: 1}} />
+                                <CommentStateShowcaseItem title="Long Thread with Pagination" description="For performance, long threads only show the first few replies with a button to load more.">
+                                    <LongThreadShowcase />
                                 </CommentStateShowcaseItem>
                                  <CommentStateShowcaseItem title="Reply in a Thread" description="A reply to another comment, indicating who the user is replying to.">
                                     <div className="relative">
                                         <div className="absolute left-4 top-0 bottom-0 w-px bg-border/40 z-0" aria-hidden="true"></div>
-                                        <Comment comment={mockComments.find(c => c.id === 3)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onViewThread: emptyFunc, replyCount: 0, replyingToAuthor:"Jane Doe"}} />
+                                        <Comment comment={mockComments.find(c => c.id === 3)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc, replyCount: 0, replyingToAuthor:"Jane Doe"}} />
                                     </div>
                                 </CommentStateShowcaseItem>
                                 <CommentStateShowcaseItem title="Resolved Comment" description="A single comment that has been marked as resolved, de-emphasizing it.">
-                                    <Comment comment={mockComments.find(c => c.id === 6)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} />
+                                    <Comment comment={mockComments.find(c => c.id === 6)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc, replyCount: 0}} />
                                 </CommentStateShowcaseItem>
                                 <CommentStateShowcaseItem title="Resolved Thread" description="When a parent comment is resolved, the entire thread including replies is de-emphasized.">
                                    <div>
-                                        <Comment comment={mockComments.find(c => c.id === 8)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onViewThread: emptyFunc, replyCount: 1, isThreadParent: true}} />
+                                        <Comment comment={mockComments.find(c => c.id === 8)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc, replyCount: 1, isThreadParent: true}} />
                                         <div className="py-4 mt-4 border-t border-border">
                                             <div className="relative">
                                                 <div className="absolute left-4 top-0 bottom-0 w-px bg-border/40 z-0" aria-hidden="true"></div>
-                                                <Comment comment={mockComments.find(c => c.id === 9)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onViewThread: emptyFunc, replyCount: 0, isParentResolved: true}} />
+                                                <Comment comment={mockComments.find(c => c.id === 9)!} currentUser={CURRENT_USER} {...{onUpdateComment: emptyFunc, onDeleteComment: emptyFunc, onToggleReaction: emptyFunc, onToggleResolve: emptyFunc, onTogglePin: emptyFunc, onViewThread: emptyFunc, replyCount: 0, isParentResolved: true}} />
                                             </div>
                                         </div>
                                    </div>

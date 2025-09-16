@@ -6,7 +6,7 @@ export interface Reaction {
 export interface CommentType {
   id: number;
   author: {
-    name: string;
+    name:string;
     avatarUrl: string;
   };
   timestamp: string;
@@ -20,4 +20,5 @@ export interface CommentType {
   };
   resolved?: boolean;
   isEdited?: boolean;
+  isPinned?: boolean;
 }

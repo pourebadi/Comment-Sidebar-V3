@@ -4,8 +4,6 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 ![Tech Stack](https://img.shields.io/badge/tech-React%20%7C%20TypeScript%20%7C%20Tailwind-blueviolet)
 
-![Project Screenshot](https://raw.githubusercontent.com/pourebadi/Comment-Sidebar-V3/refs/heads/main/components/Modern%20React%20Comment%20Sidebar.jpg)
-
 A fully-featured, modern comment and discussion sidebar component built with **React**, **TypeScript**, and **Tailwind CSS**. This project provides a seamless way to integrate interactive, real-time conversations into any web application.
 
 It's designed with a clean, dark-mode-first aesthetic and is fully responsive, customizable, and easy to integrate.
@@ -19,11 +17,26 @@ It's designed with a clean, dark-mode-first aesthetic and is fully responsive, c
 [**⬅️ View Live Demo**](https://ai.studio/apps/drive/1szNovNzlGG0huuvuoiqfqax3Sbuow2WO)
 
 ---
+> **Note:** A live GIF demonstrating the key features would be ideal here. Consider recording interactions like creating a comment, replying, reacting, filtering, and switching themes.
+---
 
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Component Philosophy](#-component-philosophy)
+- [Tech Stack](#-tech-stack)
+- [Getting Started](#-getting-started)
+- [How to Use](#-how-to-use)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
 
 ## ✨ Features
 
 - **💬 Threaded Replies:** Nested comments for organized discussions and easy-to-follow conversations.
+- **⚡️ Scalable Performance:** Efficiently handles long conversations with hundreds of replies by initially loading a subset and allowing users to load more as needed, ensuring the UI remains fast and responsive.
+- **📌 Pinned Comments:** Pin a crucial comment to the top of the list, ensuring it remains visible to everyone regardless of sorting or filtering.
 - **😍 Emoji Reactions:** Let users react to comments with a set of emojis. Hovering over a reaction shows who reacted.
 - **✅ Comment Resolution:** Mark entire comment threads as "resolved" to clean up the workspace while preserving history.
 - **🖼️ Image Attachments:** Attach images to comments for clearer visual feedback.
@@ -37,9 +50,29 @@ It's designed with a clean, dark-mode-first aesthetic and is fully responsive, c
 - **🌗 Light & Dark Modes:** Beautifully designed for both light and dark themes, with auto-detection for system preference.
 - **📱 Responsive Design:** A seamless and accessible experience on all screen sizes, from mobile to desktop.
 - **🧩 Easy Integration:** Designed as a drop-in component for any React application.
-- ** E State Handling:** Displays `Loading`, `Empty`, and `Error` states to provide appropriate user feedback.
+- **📊 State Handling:** Displays `Loading`, `Empty`, and `Error` states to provide appropriate user feedback.
 - **🔗 Copy Comment Link:** Easily copy a direct link to a specific comment for sharing.
 
+---
+
+## 🧠 Component Philosophy
+
+- **Self-Contained:** The component manages its own state internally, making it easy to drop into any application with minimal setup. The data is currently mocked but can be easily adapted to fetch from a live API.
+- **Performance First:** Features like the "show more" pagination for long threads are prioritized to ensure the UI remains smooth and responsive, even with a high volume of comments.
+- **Developer Experience:** Built with TypeScript for type safety and a clean, organized component structure to make it easy to understand, maintain, and extend.
+
+---
+
+## 🎨 Tech Stack
+
+This project is built with modern frontend technologies:
+
+-   [**React**](https://reactjs.org/) - A JavaScript library for building user interfaces.
+-   [**TypeScript**](https://www.typescriptlang.org/) - For static typing and a better developer experience.
+-   [**Tailwind CSS**](https://tailwindcss.com/) - A utility-first CSS framework for rapid UI development.
+-   [**Material Symbols**](https://fonts.google.com/icons) - For clean and modern icons.
+
+---
 
 ## 🛠️ Getting Started
 
@@ -67,11 +100,13 @@ To get a local copy up and running, follow these simple steps.
     ```
     This will open the project in your browser.
 
+---
+
 ## 💻 How to Use
 
-To integrate the comment sidebar into your React application, simply import and render the `Sidebar` component. It is fully self-contained and manages its own state.
+To integrate the comment sidebar into your React application, simply import and render the `Sidebar` component.
 
-Here is a basic example:
+Here is a basic example for an application using a standard React build setup:
 
 ```jsx
 import React from 'react';
@@ -99,15 +134,9 @@ function YourApp() {
 
 export default YourApp;
 ```
+> **Note:** For a real-world application, you would modify the component to accept props for the current user and functions to fetch and submit comments to your backend API.
 
-## 🎨 Tech Stack
-
-This project is built with modern frontend technologies:
-
--   [**React**](https://reactjs.org/) - A JavaScript library for building user interfaces.
--   [**TypeScript**](https://www.typescriptlang.org/) - For static typing and a better developer experience.
--   [**Tailwind CSS**](https://tailwindcss.com/) - A utility-first CSS framework for rapid UI development.
--   [**Material Symbols**](https://fonts.google.com/icons) - For clean and modern icons.
+---
 
 ## 🤝 Contributing
 
@@ -118,6 +147,8 @@ Contributions, issues, and feature requests are welcome!
 3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4.  Push to the Branch (`git push origin feature/AmazingFeature`)
 5.  Open a **Pull Request**
+
+---
 
 ## 📄 License
 

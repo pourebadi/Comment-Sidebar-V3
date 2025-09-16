@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, useCallback, useMemo } from 'react';
 import { CommentType } from '../types';
 import { Comment, EmojiPicker } from './Comment';
-import { AtIcon, TuneIcon, InfoIcon, ChatIcon, HistoryIcon, ArrowUpIcon, EmojiSmileAddIcon, ArrowBackIcon, SwapVertIcon, CheckIcon, PersonIcon, ChecklistIcon, AttachFileIcon, CloseIcon, ForumIcon, ErrorIcon, ReopenIcon } from './icons';
+import { AtIcon, TuneIcon, InfoIcon, ChatIcon, HistoryIcon, ArrowUpIcon, EmojiSmileAddIcon, ArrowBackIcon, SwapVertIcon, CheckIcon, PersonIcon, ChecklistIcon, AttachFileIcon, CloseIcon, ForumIcon, ErrorIcon, ReopenIcon, PushPinIcon } from './icons';
 
 const CURRENT_USER = 'You';
+const REPLIES_PAGE_SIZE = 10;
 
 const getAvatar = (name: string) => {
     // A simple, deterministic hash function to get a number from a string.
@@ -36,7 +37,8 @@ const initialComments: CommentType[] = [
         { emoji: '🍌', user: 'Erfan' },
         { emoji: '🍌', user: 'Jane Doe' },
         { emoji: '🗿', user: 'Sadeghi' }
-    ]
+    ],
+    isPinned: true,
   },
    {
     id: 10,
@@ -810,6 +812,7 @@ export const Sidebar = () => {
     const [isSortOpen, setIsSortOpen] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isResolutionFilterOpen, setIsResolutionFilterOpen] = useState(false);
+    const [visibleRepliesCount, setVisibleRepliesCount] = useState(REPLIES_PAGE_SIZE);
 
 
     const commentsContainerRef = useRef<HTMLElement>(null);
@@ -888,6 +891,7 @@ export const Sidebar = () => {
         if (el) {
             el.scrollTop = 0;
         }
+        setVisibleRepliesCount(REPLIES_PAGE_SIZE);
     }, [activeThreadId, filterUser, resolutionFilter]);
 
     const handleAddComment = (text: string, attachmentUrl?: string, parentId: number | null = null) => {
@@ -956,6 +960,21 @@ export const Sidebar = () => {
         ));
     };
 
+    const handleTogglePinComment = (id: number) => {
+        setComments(prev => {
+            const isCurrentlyPinned = prev.find(c => c.id === id)?.isPinned;
+            return prev.map(c => {
+                if (c.id === id) {
+                    return { ...c, isPinned: !isCurrentlyPinned };
+                }
+                if (!isCurrentlyPinned) {
+                    return { ...c, isPinned: false };
+                }
+                return c;
+            });
+        });
+    };
+
     const getDescendantCount = useCallback((rootId: number): number => {
         const children = comments.filter(comment => comment.parentId === rootId);
         let count = children.length;
@@ -981,8 +1000,10 @@ export const Sidebar = () => {
         return allDescendants;
     }, [comments]);
 
+    const pinnedComment = useMemo(() => comments.find(c => c.isPinned), [comments]);
+
     const sortedTopLevelComments = useMemo(() => {
-        const topLevel = comments.filter(c => !c.parentId);
+        const topLevel = comments.filter(c => !c.parentId && !c.isPinned);
 
         let filtered = filterUser
             ? topLevel.filter(c => c.author.name === filterUser)
@@ -1008,14 +1029,31 @@ export const Sidebar = () => {
         if (error) return <ErrorState onRetry={fetchData} />;
         
         const isFiltered = filterUser !== null || resolutionFilter !== 'all';
-        if (sortedTopLevelComments.length === 0) {
-             // Show filtered empty state if there are comments but none match the filter
-             // Show regular empty state if there are no comments at all
+        if (!pinnedComment && sortedTopLevelComments.length === 0) {
             return <EmptyState isFiltered={isFiltered && comments.length > 0} />;
         }
 
         return (
             <main ref={commentsContainerRef} data-scroll-container="true" className="flex-1 overflow-y-auto">
+                {pinnedComment && (
+                    <div className="p-4 border-b border-border bg-muted animate-fade-in-up">
+                        <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground mb-3 pl-11">
+                            <PushPinIcon className="!text-[16px]" />
+                            PINNED COMMENT
+                        </div>
+                        <Comment
+                            comment={pinnedComment}
+                            currentUser={CURRENT_USER}
+                            onDeleteComment={handleDeleteComment}
+                            onUpdateComment={handleUpdateComment}
+                            onToggleReaction={handleToggleReaction}
+                            onToggleResolve={handleToggleResolve}
+                            onTogglePin={handleTogglePinComment}
+                            onViewThread={() => setActiveThreadId(pinnedComment.id)}
+                            replyCount={getDescendantCount(pinnedComment.id)}
+                        />
+                    </div>
+                )}
                 <div>
                     {sortedTopLevelComments.map((comment, index) => {
                         const totalReplies = getDescendantCount(comment.id);
@@ -1029,6 +1067,7 @@ export const Sidebar = () => {
                                     onUpdateComment={handleUpdateComment}
                                     onToggleReaction={handleToggleReaction}
                                     onToggleResolve={handleToggleResolve}
+                                    onTogglePin={handleTogglePinComment}
                                     onViewThread={() => setActiveThreadId(comment.id)}
                                     replyCount={totalReplies}
                                 />
@@ -1047,8 +1086,15 @@ export const Sidebar = () => {
             return renderMainView();
         }
 
-        const threadReplies = getAllDescendants(activeThreadId!);
+        const allThreadReplies = getAllDescendants(activeThreadId!);
+        const visibleReplies = allThreadReplies.slice(0, visibleRepliesCount);
+        const remainingRepliesCount = allThreadReplies.length - visibleReplies.length;
+        
         const commentsById = new Map(comments.map(c => [c.id, c]));
+
+        const handleLoadMore = () => {
+            setVisibleRepliesCount(prev => prev + REPLIES_PAGE_SIZE);
+        };
 
         return (
              <main ref={commentsContainerRef} data-scroll-container="true" className="flex-1 overflow-y-auto">
@@ -1060,15 +1106,16 @@ export const Sidebar = () => {
                         onUpdateComment={handleUpdateComment}
                         onToggleReaction={handleToggleReaction}
                         onToggleResolve={handleToggleResolve}
+                        onTogglePin={handleTogglePinComment}
                         onViewThread={() => {}} // Already in thread view
-                        replyCount={threadReplies.length}
+                        replyCount={allThreadReplies.length}
                         isThreadParent={true}
                      />
                  </div>
                  
-                 {threadReplies.length > 0 && (
+                 {visibleReplies.length > 0 && (
                     <div className="px-4">
-                        {threadReplies.map((reply) => {
+                        {visibleReplies.map((reply) => {
                             const parent = commentsById.get(reply.parentId!);
                             const replyingToAuthor = (parent && parent.id !== activeThreadId) ? parent.author.name : undefined;
 
@@ -1083,6 +1130,7 @@ export const Sidebar = () => {
                                             onUpdateComment={handleUpdateComment}
                                             onToggleReaction={handleToggleReaction}
                                             onToggleResolve={handleToggleResolve}
+                                            onTogglePin={handleTogglePinComment}
                                             onViewThread={() => {}} // Replies in a thread don't open sub-threads
                                             replyCount={0} // No sub-replies shown
                                             replyingToAuthor={replyingToAuthor}
@@ -1092,6 +1140,17 @@ export const Sidebar = () => {
                                 </div>
                             );
                         })}
+                    </div>
+                 )}
+                 {remainingRepliesCount > 0 && (
+                    <div className="px-4 pb-4 text-center">
+                         <div className="h-px bg-border my-2 w-1/4 mx-auto"></div>
+                         <button 
+                            onClick={handleLoadMore} 
+                            className="text-sm font-semibold text-sky-500 hover:text-sky-400 p-2 rounded-md"
+                        >
+                            View {Math.min(remainingRepliesCount, REPLIES_PAGE_SIZE)} more {remainingRepliesCount > 1 ? 'replies' : 'reply'}
+                        </button>
                     </div>
                  )}
             </main>
