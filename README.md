@@ -2,154 +2,174 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-![Tech Stack](https://img.shields.io/badge/tech-React%20%7C%20TypeScript%20%7C%20Tailwind-blueviolet)
+![Tech Stack](httpshttps://img.shields.io/badge/tech-React%20%7C%20TypeScript%20%7C%20Tailwind-blueviolet)
 
-A fully-featured, modern comment and discussion sidebar component built with **React**, **TypeScript**, and **Tailwind CSS**. This project provides a seamless way to integrate interactive, real-time conversations into any web application.
+یک کامپوننت سایدبار کامنت و بحث مدرن و با امکانات کامل که با **React**، **TypeScript** و **Tailwind CSS** ساخته شده است. این پروژه راهی یکپارچه برای ادغام مکالمات تعاملی و بی‌درنگ در هر برنامه وب فراهم می‌کند.
 
-It's designed with a clean, dark-mode-first aesthetic and is fully responsive, customizable, and easy to integrate.
-
----
-
-## 🚀 Live Demo
-
-**Check out the interactive live demo of the component here:**
-
-[**⬅️ View Live Demo**](https://ai.studio/apps/drive/1szNovNzlGG0huuvuoiqfqax3Sbuow2WO)
-
----
-> **Note:** A live GIF demonstrating the key features would be ideal here. Consider recording interactions like creating a comment, replying, reacting, filtering, and switching themes.
----
-
-## 📋 Table of Contents
-
-- [Features](#-features)
-- [Component Philosophy](#-component-philosophy)
-- [Tech Stack](#-tech-stack)
-- [Getting Started](#-getting-started)
-- [How to Use](#-how-to-use)
-- [Contributing](#-contributing)
-- [License](#-license)
+این کامپوننت با زیبایی‌شناسی تمیز و اولویت با حالت تاریک (dark-mode-first) طراحی شده و کاملاً واکنش‌گرا، قابل تنظیم و آسان برای ادغام است.
 
 ---
 
-## ✨ Features
+## 🚀 دمو زنده
 
-- **💬 Threaded Replies:** Nested comments for organized discussions and easy-to-follow conversations.
-- **⚡️ Scalable Performance:** Efficiently handles long conversations with hundreds of replies by initially loading a subset and allowing users to load more as needed, ensuring the UI remains fast and responsive.
-- **📌 Pinned Comments:** Pin a crucial comment to the top of the list, ensuring it remains visible to everyone regardless of sorting or filtering.
-- **😍 Emoji Reactions:** Let users react to comments with a set of emojis. Hovering over a reaction shows who reacted.
-- **✅ Comment Resolution:** Mark entire comment threads as "resolved" to clean up the workspace while preserving history.
-- **🖼️ Image Attachments:** Attach images to comments for clearer visual feedback.
-- **👤 User Mentions:** Tag other users with `@` mentions, complete with a smart suggestion popover.
-- **🔗 Smart Text Parsing:** Automatically detects and styles hashtags (`#tag`) and URLs.
-- **🔃 Advanced Sorting & Filtering:** Sort comments by newest/oldest, and filter conversations by user or resolution status.
-- **✏️ Edit & Delete:** Full control for users to edit or delete their own comments, with a confirmation step to prevent accidental deletion.
-- **✍️ Edited Indicator:** Displays an `(edited)` label on modified comments for conversational transparency.
-- **💾 Auto-Drafts:** Automatically saves your draft as you type. Never lose a long comment by accidentally closing a tab. Works on a per-thread basis.
-- **🎯 Boundary-Aware Popovers:** Tooltips and emoji pickers intelligently reposition themselves to never go off-screen.
-- **🌗 Light & Dark Modes:** Beautifully designed for both light and dark themes, with auto-detection for system preference.
-- **📱 Responsive Design:** A seamless and accessible experience on all screen sizes, from mobile to desktop.
-- **🧩 Easy Integration:** Designed as a drop-in component for any React application.
-- **📊 State Handling:** Displays `Loading`, `Empty`, and `Error` states to provide appropriate user feedback.
-- **🔗 Copy Comment Link:** Easily copy a direct link to a specific comment for sharing.
+**دموی تعاملی و زنده این کامپوننت را اینجا ببینید:**
+
+[**⬅️ مشاهده دموی زنده**](https://ai.studio/apps/drive/1szNovNzlGG0huuvuoiqfqax3Sbuow2WO)
+
+---
+> **توجه:** در اینجا یک GIF زنده که ویژگی‌های کلیدی را نمایش می‌دهد، ایده‌آل خواهد بود. ضبط تعاملاتی مانند ایجاد کامنت، پاسخ دادن، واکنش نشان دادن، فیلتر کردن و تغییر تم را در نظر بگیرید.
+---
+
+## 📋 فهرست مطالب
+
+- [ویژگی‌ها](#-ویژگیها)
+- [موارد استفاده](#-موارد-استفاده)
+- [فلسفه کامپوننت](#-فلسفه-کامپوننت)
+- [معماری و مدیریت وضعیت](#-معماری-و-مدیریت-وضعیت)
+- [پشته فناوری](#-پشته-فناوری)
+- [API کامپوننت (Props)](#-api-کامپوننت-props)
+- [شروع به کار](#-شروع-به-کار)
+- [نقشه راه آینده](#-نقشه-راه-آینده)
+- [مشارکت](#-مشارکت)
+- [مجوز](#-مجوز)
 
 ---
 
-## 🧠 Component Philosophy
+## ✨ ویژگی‌ها
 
-- **Self-Contained:** The component manages its own state internally, making it easy to drop into any application with minimal setup. The data is currently mocked but can be easily adapted to fetch from a live API.
-- **Performance First:** Features like the "show more" pagination for long threads are prioritized to ensure the UI remains smooth and responsive, even with a high volume of comments.
-- **Developer Experience:** Built with TypeScript for type safety and a clean, organized component structure to make it easy to understand, maintain, and extend.
+- **💬 پاسخ‌های تودرتو (Threaded Replies):** کامنت‌های تودرتو برای بحث‌های سازمان‌یافته و مکالمات قابل پیگیری.
+- **⚡️ عملکرد مقیاس‌پذیر:** به طور موثر مکالمات طولانی با صدها پاسخ را مدیریت می‌کند. با بارگذاری اولیه تعداد محدودی از پاسخ‌ها و دکمه "نمایش بیشتر"، رابط کاربری سریع و پاسخگو باقی می‌ماند.
+- **📌 کامنت‌های پین‌شده:** یک کامنت مهم را به بالای لیست پین کنید تا برای همه، صرف‌نظر از فیلتر، قابل مشاهده باشد.
+- **😍 واکنش‌های اموجی:** به کاربران اجازه دهید با اموجی به کامنت‌ها واکنش نشان دهند. با نگه داشتن ماوس روی هر واکنش، لیست کاربران نمایش داده می‌شود.
+- **✅ حل کردن کامنت (Resolve):** کل یک ترد کامنت را به عنوان "حل‌شده" علامت‌گذاری کنید تا فضای کاری تمیز شود و تاریخچه حفظ گردد.
+- **🖼️ پیوست تصویر:** برای بازخورد بصری واضح‌تر، تصاویر را به کامنت‌ها پیوست کنید.
+- **👤 منشن کردن کاربران:** با استفاده از `@` کاربران دیگر را تگ کنید، همراه با یک پاپ‌آپ هوشمند برای پیشنهاد کاربران.
+- **🔗 تجزیه هوشمند متن:** به طور خودکار هشتگ‌ها (`#tag`) و URLها را شناسایی و استایل‌دهی می‌کند.
+- **🔃 مرتب‌سازی و فیلتر پیشرفته:** کامنت‌ها را بر اساس جدیدترین/قدیمی‌ترین مرتب کنید و بر اساس کاربر یا وضعیت حل شدن فیلتر نمایید.
+- **✏️ ویرایش و حذف:** کنترل کامل برای کاربران برای ویرایش یا حذف کامنت‌های خود، با یک مرحله تأیید برای جلوگیری از حذف تصادفی.
+- **✍️ نشانگر ویرایش:** برای شفافیت مکالمه، برچسب `(ویرایش شده)` را روی کامنت‌های اصلاح‌شده نمایش می‌دهد.
+- **💾 پیش‌نویس خودکار:** پیش‌نویس شما را حین تایپ به صورت خودکار ذخیره می‌کند. دیگر نگران از دست دادن یک کامنت طولانی با بستن تصادفی تب نباشید. این قابلیت برای هر ترد به صورت جداگانه کار می‌کند.
+- **🎯 پاپ‌آپ‌های آگاه از مرزها:** راهنماها (Tooltips) و انتخابگرهای اموجی به طور هوشمند موقعیت خود را تغییر می‌دهند تا هرگز از صفحه خارج نشوند.
+- **🌗 حالت‌های روشن و تاریک:** طراحی زیبا برای هر دو تم روشن و تاریک، با تشخیص خودکار تنظیمات سیستم.
+- **📱 طراحی واکنش‌گرا:** تجربه یکپارچه و قابل دسترس در تمام اندازه‌های صفحه، از موبایل تا دسکتاپ.
+- **🧩 ادغام آسان:** به عنوان یک کامپوننت آماده برای هر برنامه React طراحی شده است.
+- **📊 مدیریت وضعیت‌ها:** وضعیت‌های `در حال بارگذاری`، `خالی` و `خطا` را برای ارائه بازخورد مناسب به کاربر نمایش می‌دهد.
+- **🔗 کپی لینک کامنت:** به راحتی یک لینک مستقیم به یک کامنت خاص را برای اشتراک‌گذاری کپی کنید.
 
 ---
 
-## 🎨 Tech Stack
+## 🎯 موارد استفاده
 
-This project is built with modern frontend technologies:
+این کامپوننت برای اپلیکیشن‌هایی که همکاری و بازخورد در آن‌ها نقش کلیدی دارد، ایده‌آل است:
 
--   [**React**](https://reactjs.org/) - A JavaScript library for building user interfaces.
--   [**TypeScript**](https://www.typescriptlang.org/) - For static typing and a better developer experience.
--   [**Tailwind CSS**](https://tailwindcss.com/) - A utility-first CSS framework for rapid UI development.
--   [**Material Symbols**](https://fonts.google.com/icons) - For clean and modern icons.
+-   **ابزارهای طراحی مشارکتی:** مانند Figma، InVision یا Miro.
+-   **داشبوردهای مدیریت پروژه:** مانند Jira، Asana یا Trello.
+-   **پلتفرم‌های ویرایش اسناد:** مانند Google Docs یا Notion.
+-   **سیستم‌های مدیریت محتوا (CMS):** برای بازخورد داخلی روی محتوا.
+-   **پلتفرم‌های آموزش آنلاین:** برای بحث بین دانش‌آموزان و اساتید.
 
 ---
 
-## 🛠️ Getting Started
+## 🧠 فلسفه کامپوننت
 
-To get a local copy up and running, follow these simple steps.
+- **مستقل و خودکفا (Self-Contained):** کامپوننت وضعیت خود را به صورت داخلی مدیریت می‌کند و به راحتی و با حداقل تنظیمات در هر برنامه‌ای قابل استفاده است. داده‌ها در حال حاضر شبیه‌سازی شده‌اند اما به راحتی می‌توانند برای دریافت از یک API واقعی تطبیق داده شوند.
+- **عملکرد در اولویت (Performance First):** ویژگی‌هایی مانند صفحه‌بندی "نمایش بیشتر" برای تردهای طولانی در اولویت قرار دارند تا اطمینان حاصل شود که رابط کاربری حتی با حجم بالای کامنت‌ها، روان و پاسخگو باقی می‌ماند.
+- **تجربه توسعه‌دهنده (Developer Experience):** با TypeScript برای ایمنی نوع (type safety) و ساختار کامپوننت تمیز و سازمان‌یافته ساخته شده است تا درک، نگهداری و گسترش آن آسان باشد.
 
-1.  **Clone the repo:**
+---
+
+## 🏗️ معماری و مدیریت وضعیت
+
+- **ساختار کامپوننت:** پروژه به کامپوننت‌های منطقی تقسیم شده است:
+    - `Sidebar.tsx`: کامپوننت اصلی که منطق اصلی، واکشی داده‌ها و مدیریت وضعیت فیلترها را در بر می‌گیرد.
+    - `Comment.tsx`: برای نمایش یک کامنت واحد و تمام تعاملات مرتبط با آن (ویرایش، واکنش و غیره).
+    - `CommentInput.tsx`: فرم ورودی برای افزودن کامنت‌ها و پاسخ‌ها، شامل منطق منشن و پیوست‌ها.
+- **مدیریت وضعیت:** وضعیت به صورت محلی با استفاده از هوک‌های React (`useState`, `useMemo`, `useCallback`) مدیریت می‌شود. این رویکرد وابستگی‌های خارجی را حذف کرده و ادغام کامپوننت را ساده‌تر می‌کند.
+- **جریان داده:** داده‌ها (کامنت‌ها) از کامپوننت اصلی `Sidebar` به کامپوننت‌های فرزند از طریق `props` منتقل می‌شوند. رویدادها (مانند افزودن کامنت) با استفاده از توابع callback به سمت بالا ارسال می‌شوند.
+
+---
+
+## 🎨 پشته فناوری
+
+این پروژه با استفاده از فناوری‌های مدرن فرانت‌اند ساخته شده است:
+
+-   [**React**](https://reactjs.org/) - یک کتابخانه جاوااسکریپت برای ساخت رابط‌های کاربری.
+-   [**TypeScript**](https://www.typescriptlang.org/) - برای نوع‌دهی ایستا و تجربه توسعه بهتر.
+-   [**Tailwind CSS**](https://tailwindcss.com/) - یک فریم‌ورک CSS مبتنی بر ابزار برای توسعه سریع UI.
+-   [**Material Symbols**](https://fonts.google.com/icons) - برای آیکون‌های تمیز و مدرن.
+
+---
+
+## 🧩 API کامپوننت (Props)
+
+برای استفاده از کامپوننت `Sidebar` در یک برنامه واقعی، می‌توانید `props` زیر را به آن پاس دهید تا داده‌ها و منطق برنامه خود را به آن متصل کنید. (توجه: پیاده‌سازی فعلی از داده‌های شبیه‌سازی‌شده استفاده می‌کند.)
+
+| Prop              | نوع                                                    | پیش‌فرض       | توضیحات                                                                                                  |
+| ----------------- | ------------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------- |
+| `comments`        | `CommentType[]`                                         | `[]`          | آرایه‌ای از تمام کامنت‌ها برای نمایش.                                                                  |
+| `currentUser`     | `User`                                                  | `null`        | شیء کاربری که در حال حاضر وارد شده است تا کامنت‌های او متمایز شوند.                                         |
+| `isLoading`       | `boolean`                                               | `false`       | اگر `true` باشد، حالت اسکلتی بارگذاری را نمایش می‌دهد.                                                      |
+| `error`           | `string \| null`                                        | `null`        | در صورت وجود، پیام خطا را نمایش می‌دهد.                                                                  |
+| `onAddComment`    | `(text: string, parentId?: number) => void`             | `undefined`   | تابعی که هنگام ارسال یک کامنت جدید فراخوانی می‌شود.                                                        |
+| `onUpdateComment` | `(id: number, text: string) => void`                    | `undefined`   | تابعی که هنگام ذخیره یک کامنت ویرایش‌شده فراخوانی می‌شود.                                                     |
+| `onDeleteComment` | `(id: number) => void`                                  | `undefined`   | تابعی که هنگام حذف یک کامنت فراخوانی می‌شود.                                                               |
+| `onToggleReaction`| `(id: number, emoji: string) => void`                   | `undefined`   | تابعی که هنگام افزودن یا حذف یک واکنش اموجی فراخوانی می‌شود.                                               |
+
+---
+
+## 🛠️ شروع به کار
+
+برای دریافت یک کپی محلی و اجرای آن، این مراحل ساده را دنبال کنید.
+
+1.  **کلون کردن ریپازیتوری:**
     ```sh
     git clone https://github.com/your-username/react-comment-sidebar.git
     ```
 
-2.  **Navigate to the project directory:**
+2.  **رفتن به دایرکتوری پروژه:**
     ```sh
     cd react-comment-sidebar
     ```
 
-3.  **Install NPM packages:**
-    *(Assuming you have Node.js and npm installed)*
+3.  **نصب بسته‌های NPM:**
+    *(با فرض اینکه Node.js و npm را نصب کرده‌اید)*
     ```sh
     npm install
     ```
 
-4.  **Run the development server:**
+4.  **اجرای سرور توسعه:**
     ```sh
     npm start
     ```
-    This will open the project in your browser.
+    این دستور پروژه را در مرورگر شما باز می‌کند.
 
 ---
 
-## 💻 How to Use
+## 🗺️ نقشه راه آینده
 
-To integrate the comment sidebar into your React application, simply import and render the `Sidebar` component.
+ما برنامه‌های بزرگی برای بهبود و گسترش این کامپوننت داریم. برخی از ویژگی‌های برنامه‌ریزی‌شده عبارتند از:
 
-Here is a basic example for an application using a standard React build setup:
-
-```jsx
-import React from 'react';
-import { Sidebar } from './components/Sidebar'; // Adjust the import path as needed
-import './your-tailwind-styles.css'; // Ensure Tailwind CSS is set up in your project
-
-function YourApp() {
-  return (
-    <div style={{ display: 'flex' }}>
-      
-      {/* Your main application content */}
-      <main style={{ flex: 1, padding: '2rem' }}>
-        <h1>My Awesome Content</h1>
-        <p>This is where the main application content lives.</p>
-      </main>
-
-      {/* The Comment Sidebar */}
-      <aside style={{ width: '360px', height: '100vh', borderLeft: '1px solid #e2e8f0' }}>
-        <Sidebar />
-      </aside>
-
-    </div>
-  );
-}
-
-export default YourApp;
-```
-> **Note:** For a real-world application, you would modify the component to accept props for the current user and functions to fetch and submit comments to your backend API.
+-   [ ] **به‌روزرسانی‌های زنده:** ادغام با WebSockets برای نمایش کامنت‌ها و واکنش‌های جدید به صورت بی‌درنگ.
+-   [ ] **پشتیبانی از Markdown:** اجازه دادن به کاربران برای استفاده از Markdown برای قالب‌بندی متن.
+-   [ ] **پیوست فایل‌های بیشتر:** پشتیبانی از پیوست کردن انواع دیگر فایل‌ها (مانند PDF، اسناد و غیره).
+-   [ ] **بهبودهای دسترسی‌پذیری (a11y):** اطمینان از ناوبری کامل با صفحه‌کلید و سازگاری با صفحه‌خوان‌ها.
+-   [ ] **بین‌المللی‌سازی (i18n):** افزودن پشتیبانی برای چندین زبان.
+-   [ ] **تست‌نویسی:** نوشتن تست‌های واحد و یکپارچه‌سازی برای اطمینان از پایداری کد.
 
 ---
 
-## 🤝 Contributing
+## 🤝 مشارکت
 
-Contributions, issues, and feature requests are welcome!
+مشارکت‌ها، مشکلات و درخواست‌های ویژگی مورد استقبال قرار می‌گیرند!
 
-1.  **Fork** the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a **Pull Request**
+1.  پروژه را **Fork** کنید.
+2.  شاخه ویژگی خود را ایجاد کنید (`git checkout -b feature/AmazingFeature`).
+3.  تغییرات خود را ثبت کنید (`git commit -m 'Add some AmazingFeature'`).
+4.  تغییرات را به شاخه خود Push کنید (`git push origin feature/AmazingFeature`).
+5.  یک **Pull Request** باز کنید.
 
 ---
 
-## 📄 License
+## 📄 مجوز
 
-Distributed under the MIT License. See `LICENSE` for more information.
+تحت مجوز MIT توزیع شده است. برای اطلاعات بیشتر فایل `LICENSE` را ببینید.
